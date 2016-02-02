@@ -52,15 +52,8 @@ func main() {
 	searchpos := *offset
 	filename := *fflag
 
-	var afile *acmeFile
 	var src []byte
-	if *acmeFlag {
-		var err error
-		if afile, err = acmeCurrentFile(); err != nil {
-			fail("%v", err)
-		}
-		filename, src, searchpos = afile.name, afile.body, afile.offset
-	} else if *readStdin {
+	if *readStdin {
 		src, _ = ioutil.ReadAll(os.Stdin)
 	} else {
 		// TODO if there's no filename, look in the current
@@ -89,10 +82,6 @@ func main() {
 		fmt.Fprintf(os.Stderr, "no expression or offset specified\n")
 		flag.Usage()
 		os.Exit(2)
-	}
-	// print old source location to facilitate backtracking
-	if *acmeFlag {
-		fmt.Printf("\t%s:#%d\n", afile.name, afile.runeOffset)
 	}
 	switch e := o.(type) {
 	case *ast.ImportSpec:
